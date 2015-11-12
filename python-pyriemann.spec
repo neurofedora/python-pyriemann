@@ -2,7 +2,7 @@
 
 Name:           python-%{modname}
 Version:        0.2.3
-Release:        1%{?dist}
+Release:        2%{?dist}
 Summary:        Covariance matrices manipulation and Biosignal classification
 
 License:        BSD
@@ -26,12 +26,20 @@ BuildRequires:  python2-nose
 BuildRequires:  numpy scipy
 BuildRequires:  python-scikit-learn
 BuildRequires:  python-joblib
+%if 0%{?fedora} > 23
 BuildRequires:  python2-pandas
+%else
+BuildRequires:  python-pandas
+%endif
 BuildRequires:  python-matplotlib
 Requires:       numpy scipy
 Requires:       python-scikit-learn
 Requires:       python-joblib
+%if 0%{?fedora} > 23
 Requires:       python2-pandas
+%else
+Requires:       python-pandas
+%endif
 Requires:       python-matplotlib
 
 %description -n python2-%{modname}
@@ -110,5 +118,8 @@ popd
 %{python3_sitelib}/%{modname}*
 
 %changelog
+* Thu Nov 12 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.2.3-2
+- Fix pandas requirements on f23
+
 * Wed Nov 11 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.2.3-1
 - Initial package

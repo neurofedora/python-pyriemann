@@ -8,6 +8,8 @@ Summary:        Covariance matrices manipulation and Biosignal classification
 License:        BSD
 URL:            https://github.com/alexandrebarachant/pyRiemann
 Source0:        https://github.com/alexandrebarachant/pyRiemann/archive/v%{version}/%{modname}-%{version}.tar.gz
+# https://github.com/alexandrebarachant/pyRiemann/commit/7b944d6194e657e0f666a2e796f9fc74df97bf9a
+Patch0:         0001-Fix-16.patch
 
 BuildArch:      noarch
 
@@ -23,21 +25,23 @@ Summary:        %{summary}
 %{?python_provide:%python_provide python2-%{modname}}
 BuildRequires:  python2-devel
 BuildRequires:  python2-nose
-BuildRequires:  numpy scipy
 BuildRequires:  python-scikit-learn
-BuildRequires:  python-joblib
+BuildRequires:  python2-joblib
 %if 0%{?fedora} > 23
+BuildRequires:  python2-numpy python2-scipy
 BuildRequires:  python2-pandas
 %else
+BuildRequires:  numpy scipy
 BuildRequires:  python-pandas
 %endif
 BuildRequires:  python-matplotlib
-Requires:       numpy scipy
 Requires:       python-scikit-learn
-Requires:       python-joblib
+Requires:       python2-joblib
 %if 0%{?fedora} > 23
+Requires:       python2-numpy python2-scipy
 Requires:       python2-pandas
 %else
+Requires:       numpy scipy
 Requires:       python-pandas
 %endif
 Requires:       python-matplotlib
@@ -78,8 +82,11 @@ like EEG, MEG or EMG.
 Python 3 version.
 
 %prep
-%autosetup -c
+%setup -q -c
 mv pyRiemann-%{version} python2
+pushd python2
+%patch0 -p1
+popd
 cp -a python2 python3
 2to3 --write --nobackups python3/
 
@@ -118,6 +125,10 @@ popd
 %{python3_sitelib}/%{modname}*
 
 %changelog
+* Sun Nov 29 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.2.3-3
+- Fix building with new scikit-learn
+- Fix requirements a bit
+
 * Thu Nov 12 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.2.3-2
 - Fix pandas requirements on f23
 
